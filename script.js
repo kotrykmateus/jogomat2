@@ -14,7 +14,6 @@ const cenas = {
         opcoes: [
             { texto: "Investigar os logs em detalhes", mensagem: "Você abre o registro de atividades e começa a separar os eventos.", mudanca: 5, proxima: "log1" },
             { texto: "Isolar imediatamente a conta suspeita", mensagem: "A conta é bloqueada enquanto os demais sistemas continuam funcionando.", mudanca: 5, proxima: "bloqueio1" },
-            { texto: "Iniciar uma investigação completa do incidente", mensagem: "Você abre um protocolo detalhado para revisar todo o ataque.", mudanca: 5, proxima: "longa1" },
             { texto: "Ignorar o alerta e continuar o turno", mensagem: "Você fecha o painel. O ataque aproveita a distração.", mudanca: -20, proxima: "gameoverNegligencia" }
         ]
     },
@@ -33,7 +32,8 @@ const cenas = {
         texto: "Mesmo com a conta isolada, um robô faz dezenas de tentativas por diferentes pontos de entrada.",
         opcoes: [
             { texto: "Ativar o limite de tentativas", mensagem: "O sistema começa a bloquear tentativas repetidas automaticamente.", mudanca: 10, proxima: "bloqueio3" },
-            { texto: "Desligar apenas o servidor público", mensagem: "O ataque para, mas o serviço externo fica indisponível.", mudanca: -15, proxima: "bloqueio3" }
+            { texto: "Desligar apenas o servidor público", mensagem: "O ataque para, mas o serviço externo fica indisponível.", mudanca: -15, proxima: "bloqueio3" },
+            { texto: "Monitorar os pontos de entrada", mensagem: "Você acompanha o padrão enquanto prepara uma resposta completa.", mudanca: 5, proxima: "bloqueio3" }
         ]
     },
     bloqueio3: {
@@ -256,6 +256,16 @@ function renderizarCena() {
 
 function escolherOpcao(indice) {
     const opcao = cenas[cenaAtual].opcoes[indice];
+
+    if (opcao.acao === "reiniciar") {
+        integridade = 100;
+        etapa = 1;
+        cenaAtual = opcao.proxima || "inicio";
+        atualizarBarra();
+        renderizarCena();
+        return;
+    }
+
     integridade += opcao.mudanca;
     atualizarBarra();
 
